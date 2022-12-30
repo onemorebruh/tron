@@ -1,4 +1,4 @@
-const socket = io("ws://localhost:9000");
+const socket = io("ws://192.168.1.111:9000");
 
 let table = document.getElementById("table");
 
@@ -7,9 +7,9 @@ let ctx = table.getContext("2d");
 socket.on('message', async arrayOfDots => {
   //parse data
   console.log(arrayOfDots);
+  ctx.clearRect(0, 0, 720, 480);
   await arrayOfDots.forEach(function (element, index, arrayOfDots) {
     //draw blue dot
-    ctx.clearRect(0, 0, 720, 480);
     ctx.fillStyle = "rgb(0, 0, 255)";
     let x = element.head.x;
     let y = element.head.y;

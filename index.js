@@ -4,12 +4,18 @@ const http = require("http").createServer();
 const game = require("./game.js");
 const SnakeBodyPart = require("./SnakeBodyPart.js");
 const Snake = require("./Snake.js");
+const cors = require("cors");
+
 
 let players = []
 let playerIDS = []
 
 const io = require("socket.io")(http, {
-  cors: { origin: "*" }
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+    allowHeaders: "*"
+  }
 });
 
 io.on("connection", (socket) => {
@@ -23,14 +29,15 @@ io.on("connection", (socket) => {
   setInterval(() => {
     let data = game.onUpdate(players);
     io.emit("message", data);
+    console.table(data);
   }, game.interval_between_frames);
   socket.on('message', (message) => {
-    console.table(playerIDS);
     players[playerIDS[socket.id]].direction = message;
   });
 });
 
 app.use(express.static("static"));
+app.use(cors());
 
 app.get("/", function (request, response) {
   response.sendFile(__dirname + "/templates/index.html");

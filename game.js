@@ -35,7 +35,6 @@ function onUpdate(players){
     }else {
       player.direction = "right"
     }
-    positions.shift()
     positions.push(player);
 
   })
