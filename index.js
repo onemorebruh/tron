@@ -18,7 +18,6 @@ io.on("connection", (socket) => {
     let x = Math.floor(Math.random()*48);
   let y = Math.floor(Math.random()*72);
   players.push(new Snake.Snake(x,y));
-  console.log(players);
   
   //draw dot on random coordinates
   setInterval(() => {
@@ -26,7 +25,8 @@ io.on("connection", (socket) => {
     io.emit("message", data);
   }, game.interval_between_frames);
   socket.on('message', (message) => {
-       
+    players[0].direction = message;
+    console.log(players[0], message);
   });
 });
 

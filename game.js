@@ -3,31 +3,42 @@ const Snake = require("./Snake.js");
 var max_players_amount = 10
 var interval_between_frames = 120
 
-var positions = []
 
 function onUpdate(players){
-  console.log(players);
+  var positions = []
     //for each move
   players.forEach(function(player, index, players){
     if (player.body.lenght > 0) {
       player.body.shift()
       player.body.push(this.head)
     }
+    if (player.head.y > 72) {
+      player.head.y = 0;
+    };
+    if (player.head.y < 0) {
+      player.head.y = 72;
+    };
+    if (player.head.x > 48) {
+      player.head.x = 0;
+    };
+    if (player.head.x < 0) {
+      player.head.x = 48;
+    };
     if (player.direction == "up") {
-      player.head.y++;
-    }else if (player.direction == "down") {
-      player.head.y--;
-    }else if (player.direction == "right"){
-      player.head.x++;
-    }else if (player.direction == "left") {
       player.head.x--;
+    }else if (player.direction == "down") {
+      player.head.x++;
+    }else if (player.direction == "right"){
+      player.head.y++;
+    }else if (player.direction == "left") {
+      player.head.y--;
     }else {
       player.direction = "right"
     }
+    positions.shift()
     positions.push(`${player.head.x}, ${player.head.y}`);
 
   })
-  console.log(positions)
   return positions
 }
 
