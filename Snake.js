@@ -1,11 +1,12 @@
 const SnakeBodyPart = require("./SnakeBodyPart.js");
 
 exports.Snake = class Snake{
-  constructor(x,y) {
+  constructor(x,y, id) {
     this.head = new SnakeBodyPart.SnakeBodyPart(x, y);
     this.body = [];
     this.score = 0;
-    this.direction = "right"
+    this.direction = "right";
+    this.owner = id;
   }
 
   Default(){

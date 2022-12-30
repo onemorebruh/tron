@@ -11,8 +11,8 @@ socket.on('message', async arrayOfDots => {
     //draw blue dot
     ctx.clearRect(0, 0, 720, 480);
     ctx.fillStyle = "rgb(0, 0, 255)";
-    let x = element.split(", ")[0];
-    let y = element.split(", ")[1];
+    let x = element.head.x;
+    let y = element.head.y;
     ctx.fillRect(y * 10, x * 10, 10, 10);
   });
 });
@@ -42,4 +42,11 @@ document.addEventListener("keydown", (e) => {
     default:
       break;
   }
+});
+
+let WSButton = document.getElementById("WSButton");
+
+WSButton.addEventListener("click", function(e){
+  e.preventDefault();
+  socket.emit("test", "aboba");
 });
