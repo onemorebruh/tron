@@ -5,7 +5,6 @@ var interval_between_frames = 120
 
 
 function onUpdate(players){
-  console.table(players)
   var positions = []
     //for each move
   players.forEach(function(player, index, players){
@@ -25,7 +24,6 @@ function onUpdate(players){
     if (player.head.x < 0) {
       player.head.x = 48;
     };
-    console.log(player.direction)
     if (player.direction == "up") {
       player.head.x--;
     }else if (player.direction == "down") {
