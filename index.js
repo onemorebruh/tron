@@ -23,7 +23,6 @@ io.on("connection", (socket) => {
   //draw dot on random coordinates
   setInterval(() => {
     let data = game.onUpdate(players);
-    console.log(data);
     io.emit("message", data);
   }, game.interval_between_frames);
   socket.on('message', (message) => {

@@ -4,16 +4,17 @@ let table = document.getElementById("table");
 
 let ctx = table.getContext("2d");
 
-socket.on('message', text => {
+socket.on('message', async arrayOfDots => {
   //parse data
-  let x, y, id;
-  console.log(text);
-  x = text.split(", ")[0];
-  y = text.split(", ")[1];
-  //draw blue dot
-  ctx.fillStyle = "rgb(0, 0, 255)";
-  console.log(x, y, id);
-  ctx.fillRect(y * 10, x * 10, 10, 10);
+  console.log(arrayOfDots);
+  await arrayOfDots.forEach(function (element, index, arrayOfDots) {
+    //draw blue dot
+    ctx.clearRect(0, 0, table.widthwidth, table.height)
+    ctx.fillStyle = "rgb(0, 0, 255)";
+    let x = element.split(", ")[0];
+    let y = element.split(", ")[1];
+    ctx.fillRect(y * 10, x * 10, 10, 10);
+  });
 });
 
 let WSButton = document.getElementById("WSButton");
