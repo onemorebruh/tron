@@ -1,4 +1,4 @@
-const socket = io("ws://192.168.1.111:9000");
+const socket = io("ws://192.168.1.103:9000");
 
 let table = document.getElementById("table");
 
@@ -14,6 +14,9 @@ socket.on('message', async arrayOfDots => {
     let x = element.head.x;
     let y = element.head.y;
     ctx.fillRect(y * 10, x * 10, 10, 10);
+    element.body.forEach(function (element, index, array){
+      ctx.fillRect(element.y * 10, element.x * 10, 10, 10);
+    });
   });
 });
 

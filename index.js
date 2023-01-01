@@ -29,7 +29,6 @@ io.on("connection", (socket) => {
   setInterval(() => {
     let data = game.onUpdate(players);
     io.emit("message", data);
-    console.table(data);
   }, game.interval_between_frames);
   socket.on('message', (message) => {
     players[playerIDS[socket.id]].direction = message;
@@ -43,5 +42,5 @@ app.get("/", function (request, response) {
   response.sendFile(__dirname + "/templates/index.html");
 });
 
-app.listen(3000, '192.168.1.111');
+app.listen(3000, '192.168.1.103');
 http.listen(9000, () => console.log("listening to ws"));
