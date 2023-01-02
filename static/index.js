@@ -1,7 +1,7 @@
 const ip = window.location.origin;
 const port = window.location.port;
-console.log(ip.length - port.length);
-const socket = io(`ws://192.168.1.111:9000`);
+let addres = ip.slice(7, ip.length - port.length);
+const socket = io(`ws://${addres}9000`);
 
 let table = document.getElementById("table");
 
@@ -20,6 +20,15 @@ socket.on('message', async arrayOfDots => {
     element.body.forEach(function (element, index, array){
       ctx.fillRect(element.y * 10, element.x * 10, 10, 10);
     });
+  });
+  await arrayOfDots.forEach(function (element, index, arrayOfDots){
+    //collision check
+    let colors = ctx.getImageData(element.head.y, element.head.x, 1, 1).data;
+    console.log(colors);
+    if(rgb != 'rgb(0, 0, 0)'){
+      //snake destroys
+      console.log("boom");
+    };
   });
 });
 

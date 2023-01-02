@@ -54,6 +54,15 @@ io.on("connection", (socket) => {
       }
     }
   });
+  socket.on("disconnect", function() {
+    let numberToDelete;
+    players.forEach(function (player, index, playerIDS){
+      if (player.owner == socket.id){
+        playerIDS[index] = '-1';
+        players = players.slice(0, index).concat(players.slice(index + 1, players.length));
+      }
+    });
+  });
 });
 
 app.use(express.static("static"));
