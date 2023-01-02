@@ -1,4 +1,7 @@
-const socket = io("ws://192.168.1.103:9000");
+const ip = window.location.origin;
+const port = window.location.port;
+console.log(ip.length - port.length);
+const socket = io(`ws://192.168.1.111:9000`);
 
 let table = document.getElementById("table");
 
@@ -47,9 +50,3 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-let WSButton = document.getElementById("WSButton");
-
-WSButton.addEventListener("click", function(e){
-  e.preventDefault();
-  socket.emit("test", "aboba");
-});

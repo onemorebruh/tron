@@ -5,6 +5,7 @@ const game = require("./game.js");
 const SnakeBodyPart = require("./SnakeBodyPart.js");
 const Snake = require("./Snake.js");
 const cors = require("cors");
+const config = require("./config.js");
 
 
 let players = []
@@ -31,7 +32,27 @@ io.on("connection", (socket) => {
     io.emit("message", data);
   }, game.interval_between_frames);
   socket.on('message', (message) => {
-    players[playerIDS[socket.id]].direction = message;
+    //stop user from killing itself bcause of collision
+    if (message == "up") {
+      if (players[playerIDS[socket.id]].direction != "down") {
+        players[playerIDS[socket.id]].direction = message;
+      }
+    }
+    if (message == "down") {
+      if (players[playerIDS[socket.id]].direction != "up") {
+        players[playerIDS[socket.id]].direction = message;
+      }
+    }
+    if (message == "left") {
+      if (players[playerIDS[socket.id]].direction != "right") {
+        players[playerIDS[socket.id]].direction = message;
+      }
+    }
+    if (message == "right") {
+      if (players[playerIDS[socket.id]].direction != "left") {
+        players[playerIDS[socket.id]].direction = message;
+      }
+    }
   });
 });
 
@@ -42,5 +63,5 @@ app.get("/", function (request, response) {
   response.sendFile(__dirname + "/templates/index.html");
 });
 
-app.listen(3000, '192.168.1.103');
+app.listen(3000, config.IP);
 http.listen(9000, () => console.log("listening to ws"));
