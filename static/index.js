@@ -3,11 +3,19 @@ const port = window.location.port;
 let addres = ip.slice(7, ip.length - port.length);
 const socket = io(`ws://${addres}9000`);
 
+class Dot{
+  constructor(y, x){
+    this.x = x;
+    this.y = y;
+  }
+}
+
 let table = document.getElementById("table");
 
 let ctx = table.getContext("2d");
 
 socket.on('message', async arrayOfDots => {
+  let arrForCollision = []
   //parse data
   console.log(arrayOfDots);
   ctx.clearRect(0, 0, 720, 480);
@@ -19,16 +27,19 @@ socket.on('message', async arrayOfDots => {
     ctx.fillRect(y * 10, x * 10, 10, 10);
     element.body.forEach(function (element, index, array){
       ctx.fillRect(element.y * 10, element.x * 10, 10, 10);
+      arrForCollision.push(new Dot(element.y * 10, element.x * 10));
     });
   });
   await arrayOfDots.forEach(function (element, index, arrayOfDots){
     //collision check
-    let colors = ctx.getImageData(element.head.y, element.head.x, 1, 1).data;
-    console.log(colors);
-    if(rgb != 'rgb(0, 0, 0)'){
+    let dotHead = new Dot(element.head.y * 10, element.head.x * 10);
+    console.log(dotHead, arrForCollision);
+    arrForCollision.forEach(function(element, index, arrForCollision){
+      if (element.x == dotHead.x && element.y == dotHead.y) {
       //snake destroys
       console.log("boom");
-    };
+      }
+    });
   });
 });
 
