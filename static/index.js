@@ -38,7 +38,7 @@ socket.on('message', async function (arrayOfSnakes) {
   ctx.clearRect(0, 0, 720, 480);
   arrayOfSnakes.forEach(async function (snake, index, arrayOfSnakes) {
     //draw colored snake
-    ctx.fillStyle = "rgb(0, 0, 255)";
+    ctx.fillStyle = `rgb(${snake.r}, ${snake.g}, ${snake.b})`;
     let x = snake.head.x;
     let y = snake.head.y;
     ctx.fillRect(y * 10, x * 10, 10, 10);

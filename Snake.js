@@ -6,8 +6,12 @@ exports.Snake = class Snake{
     this.body = [];
     this.score = 0;
     this.direction = "right";
-    this.owner = id;
+    this.owner = id;//socketId
     this.id = amount;
+    //color
+    this.r = Math.floor(Math.random()*(255 + 1));
+    this.g = Math.floor(Math.random()*(255 + 1));
+    this.b = Math.floor(Math.random()*(255 + 1));
   }
 
   Default(){

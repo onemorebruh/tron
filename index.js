@@ -33,6 +33,7 @@ io.on("connection", (socket) => {
   }, game.interval_between_frames);
 
   socket.on('message', (message) => {
+    if (players[playerIDS[socket.id]]){
     //stop user from killing itself bcause of collision
     if (message == "up") {
       if (players[playerIDS[socket.id]].direction != "down") {
@@ -63,6 +64,7 @@ io.on("connection", (socket) => {
         players = players.slice(0, index).concat(players.slice(index + 1, players.length));
       }
       })
+    }
     }
     });
   socket.on("disconnect", function() {
