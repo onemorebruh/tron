@@ -28,9 +28,10 @@ io.on("connection", (socket) => {
   players.push(new Snake.Snake(x,y, socket.id, players.length));
   playerIDS[socket.id] = (players.length - 1);
   setInterval(() => {
-    let data = game.onUpdate(players);
-    io.emit("message", data);
+    let snakes = game.onUpdate(players);
+    io.emit("message", snakes);
   }, game.interval_between_frames);
+
   socket.on('message', (message) => {
     //stop user from killing itself bcause of collision
     if (message == "up") {
@@ -53,9 +54,18 @@ io.on("connection", (socket) => {
         players[playerIDS[socket.id]].direction = message;
       }
     }
-  });
+    if (message == "destroy") {
+      //throw new Error("Something went badly wrong!");
+      players.forEach(function (player, index, playerIDS){
+      // deletes snake who lose
+      if (player.owner == socket.id){
+        playerIDS[index] = '-1';
+        players = players.slice(0, index).concat(players.slice(index + 1, players.length));
+      }
+      })
+    }
+    });
   socket.on("disconnect", function() {
-    let numberToDelete;
     players.forEach(function (player, index, playerIDS){
       if (player.owner == socket.id){
         playerIDS[index] = '-1';

@@ -1,12 +1,26 @@
 const ip = window.location.origin;
 const port = window.location.port;
-let addres = ip.slice(7, ip.length - port.length);
+const addres = ip.slice(7, ip.length - port.length);
 const socket = io(`ws://${addres}9000`);
 
-class Dot{
+class SnakeBodyPart{
   constructor(y, x){
     this.x = x;
     this.y = y;
+  }
+}
+
+class SnakeHeads extends SnakeBodyPart {
+
+  constructor(y, x, index, owner){
+    super(y, x)
+    this.index = index;
+    this.isImmortal = true;
+    this.owner = owner;
+  }
+
+  makeMortal() {
+    this.isImmortal = false
   }
 }
 
@@ -14,33 +28,50 @@ let table = document.getElementById("table");
 
 let ctx = table.getContext("2d");
 
-socket.on('message', async arrayOfDots => {
-  let arrForCollision = []
+socket.on('message', async function (arrayOfSnakes) {
+  const socketId = socket.id;
+  let snakeHeads = [];
+  let collisionSnakeBodyParts = [];//array of SnakeBodyParts of each snake exclude heads
+  //i need this array to use forEach on it
+    
   //parse data
-  console.log(arrayOfDots);
   ctx.clearRect(0, 0, 720, 480);
-  await arrayOfDots.forEach(function (element, index, arrayOfDots) {
-    //draw blue dot
+  arrayOfSnakes.forEach(async function (snake, index, arrayOfSnakes) {
+    //draw colored snake
     ctx.fillStyle = "rgb(0, 0, 255)";
-    let x = element.head.x;
-    let y = element.head.y;
+    let x = snake.head.x;
+    let y = snake.head.y;
     ctx.fillRect(y * 10, x * 10, 10, 10);
-    element.body.forEach(function (element, index, array){
-      ctx.fillRect(element.y * 10, element.x * 10, 10, 10);
-      arrForCollision.push(new Dot(element.y * 10, element.x * 10));
-    });
-  });
-  await arrayOfDots.forEach(function (element, index, arrayOfDots){
-    //collision check
-    let dotHead = new Dot(element.head.y * 10, element.head.x * 10);
-    console.log(dotHead, arrForCollision);
-    arrForCollision.forEach(function(element, index, arrForCollision){
-      if (element.x == dotHead.x && element.y == dotHead.y) {
-      //snake destroys
-      console.log("boom");
+    //collect heads for collision checks
+    let iterHead = new SnakeHeads(y * 10, x * 10, index, snake.owner);
+    if (snake.body.length >= 15){//adds abbility to lose when tail is long enough
+      iterHead.makeMortal();
+    }
+    snakeHeads.push(iterHead);
+    snake.body.forEach(function (bodyPart, index, array){
+      ctx.fillRect(bodyPart.y * 10, bodyPart.x * 10, 10, 10);
+      if (iterHead.y == (bodyPart.y * 10) && iterHead.x == (bodyPart.x * 10)){
+        // dont add to collisionSnakeBodyParts
+
+      } else {
+        collisionSnakeBodyParts.push(new SnakeBodyPart(bodyPart.y * 10, bodyPart.x * 10));
       }
     });
   });
+  snakeHeads.forEach(function (head, index, snakeHeads){
+    //collision check
+    collisionSnakeBodyParts.forEach(function (snakeBodyPart, index, collisionSnakeBodyParts) {
+      if (head.x == snakeBodyPart.x && head.y == snakeBodyPart.y && !head.isImmortal){// snake is immortal cause it duplicates head each time it becomes bigger
+        if (socketId == head.owner){
+          socket.emit("message", "destroy");
+          alert("you lose");
+        }
+      };
+    });
+  });
+  //clear collision arrays
+  snakeHeads = [];
+  collisionSnakeBodyParts = [];
 });
 
 //motion
